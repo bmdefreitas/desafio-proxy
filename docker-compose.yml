@@ -1,0 +1,27 @@
+version: '3'
+services:
+    test1:
+        build:
+            dockerfile: ./docker/desafio.dockerfile
+            context: .
+        image: nginx
+        container_name: test1
+        networks: 
+            - desafio-network
+        
+    test2:
+        build:
+            dockerfile: ./docker/desafio.dockerfile
+            context: .
+        image: nginx
+        container_name: test2
+        networks: 
+            - desafio-network
+            
+networks: 
+    desafio-network:
+        driver: bridge
+        ipam:
+          driver: default
+          config:
+          - subnet: 10.0.0.0/24
