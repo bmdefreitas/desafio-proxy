@@ -7,7 +7,8 @@ services:
         image: nginx
         container_name: test1
         networks: 
-            - desafio-network
+            desafio-network:
+              ipv4_address: 10.0.0.1
         
     test2:
         build:
@@ -16,12 +17,14 @@ services:
         image: nginx
         container_name: test2
         networks: 
-            - desafio-network
+            desafio-network:
+              ipv4_address: 10.0.0.2
             
 networks: 
     desafio-network:
         driver: bridge
         ipam:
-          driver: default
           config:
           - subnet: 10.0.0.0/24
+          #gateway: 10.0.0.250 - Só funciona na versão 2 - Preciso ajustar
+          
