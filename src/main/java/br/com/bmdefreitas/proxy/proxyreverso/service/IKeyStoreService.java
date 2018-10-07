@@ -13,5 +13,5 @@ public interface IKeyStoreService {
 	
 	public KeyStore getKeyStore() throws KeyStoreException, NoSuchAlgorithmException, CertificateException, FileNotFoundException, IOException;
 	
-	public X509Certificate checkCertificates(Certificate[] certificates) throws KeyStoreException, NoSuchAlgorithmException, CertificateException, FileNotFoundException, IOException;
+	public X509Certificate containsCertificatesInKeystore(Certificate[] certificates) throws KeyStoreException, NoSuchAlgorithmException, CertificateException, FileNotFoundException, IOException;
 }

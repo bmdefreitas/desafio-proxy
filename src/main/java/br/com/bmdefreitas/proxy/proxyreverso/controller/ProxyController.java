@@ -29,6 +29,12 @@ public class ProxyController extends HttpServlet {
     protected void doGet(
       HttpServletRequest request, 
       HttpServletResponse response) throws ServletException, IOException {
-		proxyService.checkRequest(new URL(request.getRequestURL().toString()), response);
+		String bodyResponse = proxyService.checkRequest(new URL(request.getRequestURL().toString()));
+		if ( !bodyResponse.isEmpty() ) {
+			response.setStatus(HttpServletResponse.SC_OK);
+			response.getWriter().print(bodyResponse);
+		} else {
+			response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+		}
     }
 }

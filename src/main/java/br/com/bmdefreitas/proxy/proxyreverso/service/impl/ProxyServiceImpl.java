@@ -3,8 +3,6 @@ package br.com.bmdefreitas.proxy.proxyreverso.service.impl;
 import java.io.IOException;
 import java.net.URL;
 
-import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,8 +16,8 @@ public class ProxyServiceImpl implements IProxyService {
 	private ICertificateService certificateService;
 	
 	@Override
-	public void checkRequest(URL url, HttpServletResponse response) throws IOException {
-		certificateService.checkCertificates(url, response);
+	public String checkRequest(URL url) throws IOException {
+		return certificateService.checkCertificates(url);
 		
 	}
 

@@ -12,7 +12,8 @@ import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 
 import org.cryptacular.util.CertUtil;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import br.com.bmdefreitas.proxy.proxyreverso.service.IKeyStoreService;
@@ -22,14 +23,8 @@ public class KeyStoreServiceImpl implements IKeyStoreService{
 	
 	private KeyStore keyStore;
 	
-	@Value("${server.ssl.key-store}")
-	private String KEYSTORE_FILE = "keystore.p12";
-	
-	@Value("${server.ssl.key-store-password}")
-	private String KEYSTORE_PASSWORD = "123456";
-	
-	@Value("${server.ssl.key-store-type}")
-	private String KEYSTORE_TYPE = "PKCS12";
+	@Autowired
+    private Environment env;
 
 	@Override
 	public KeyStore getKeyStore() throws 
@@ -38,20 +33,20 @@ public class KeyStoreServiceImpl implements IKeyStoreService{
 		CertificateException, 
 		FileNotFoundException, 
 		IOException {
-		
-		File file = new File(KEYSTORE_FILE);
 
-		keyStore = KeyStore.getInstance(KEYSTORE_TYPE);
+		File file = new File(env.getProperty("keystore-file"));
+
+		keyStore = KeyStore.getInstance(env.getProperty("keystore-type"));
 		
 		if (file.exists()) {
-			keyStore.load(new FileInputStream(file), KEYSTORE_PASSWORD.toCharArray());
+			keyStore.load(new FileInputStream(file), env.getProperty("keystore-pass").toCharArray());
 		} else {
 			throw new KeyStoreException(); 
 		}
 		return keyStore;
 	}
 	
-	public X509Certificate checkCertificates(Certificate[] certificates) throws KeyStoreException, NoSuchAlgorithmException, CertificateException, FileNotFoundException, IOException {
+	public X509Certificate containsCertificatesInKeystore(Certificate[] certificates) throws KeyStoreException, NoSuchAlgorithmException, CertificateException, FileNotFoundException, IOException {
 		keyStore = getKeyStore();
 		for (Certificate certificate : certificates) {
 			if (certificate instanceof X509Certificate) {
