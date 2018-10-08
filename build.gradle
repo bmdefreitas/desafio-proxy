@@ -18,6 +18,7 @@ apply plugin: 'io.spring.dependency-management'
 group = 'br.com.bmdefreitas.proxy'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 1.8
+targetCompatibility = 1.8
 
 repositories {
 	mavenCentral()
@@ -31,8 +32,7 @@ dependencies {
 	testImplementation('org.springframework.boot:spring-boot-starter-test')
 }
 
-task fatJar(type: Jar) {	
-    baseName = project.name
-    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-    with jar
+bootJar {
+    baseName = 'proxy-reverso'
+    version =  '0.1.0'
 }

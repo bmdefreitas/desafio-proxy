@@ -34,12 +34,12 @@ public class KeyStoreServiceImpl implements IKeyStoreService{
 		FileNotFoundException, 
 		IOException {
 
-		File file = new File(env.getProperty("keystore-file"));
+		File file = new File("/opt/keystore.p12");
 
-		keyStore = KeyStore.getInstance(env.getProperty("keystore-type"));
+		keyStore = KeyStore.getInstance("PKCS12");
 		
 		if (file.exists()) {
-			keyStore.load(new FileInputStream(file), env.getProperty("keystore-pass").toCharArray());
+			keyStore.load(new FileInputStream(file), "123456".toCharArray());
 		} else {
 			throw new KeyStoreException(); 
 		}

@@ -19,7 +19,16 @@ services:
         networks: 
             desafio-network:
               ipv4_address: 10.0.0.2
-            
+              
+    java:
+        build:
+            dockerfile: ./docker/java.dockerfile
+            context: .
+        image: melinite/oracle-java8-jdk
+        container_name: java
+        networks: 
+            desafio-network:
+              ipv4_address: 10.0.0.7            
 networks: 
     desafio-network:
         driver: bridge

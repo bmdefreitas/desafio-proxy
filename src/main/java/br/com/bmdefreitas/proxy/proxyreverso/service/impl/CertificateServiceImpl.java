@@ -44,10 +44,9 @@ public class CertificateServiceImpl implements ICertificateService {
 
 	@Override
 	public String checkCertificates(URL url) throws IOException {
+		String bodyResponse = null;
 		
-		try {		
-			
-			String bodyResponse = null;
+		try {
 			
 			X509Certificate cert = keyStoreService.containsCertificatesInKeystore(getCertificatesFromConnection(url));
 
@@ -60,7 +59,9 @@ public class CertificateServiceImpl implements ICertificateService {
 					    	bodyResponse = bodyResponse + line;
 					    }
 						
-					}					
+					} catch (Exception e) {
+						bodyResponse = e.getMessage();
+					}
 				} else if (cert.getSubjectDN().getName().contains("test2.localdomain")) {
 					URL url2 = new URL("http://10.0.0.2:8000/");
 					try (BufferedReader reader = new BufferedReader(new InputStreamReader(url2.openStream(), "UTF-8"))) {
@@ -68,6 +69,8 @@ public class CertificateServiceImpl implements ICertificateService {
 					    	bodyResponse = bodyResponse + line;
 					    }
 						
+					} catch (Exception e) {
+						bodyResponse = e.getMessage();
 					}
 				}								
 			}
@@ -76,7 +79,7 @@ public class CertificateServiceImpl implements ICertificateService {
 
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
-			return null;
+			return bodyResponse;
 		}		
 		
 	}

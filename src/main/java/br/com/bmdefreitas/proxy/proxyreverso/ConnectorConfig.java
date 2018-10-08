@@ -28,7 +28,7 @@ public class ConnectorConfig {
 			connector.setSecure(true);
 			connector.setPort(8443);
 			protocol.setSSLEnabled(true);
-			protocol.setKeystoreFile("/home/bruno/git/desafio-proxy/keystore.p12");
+			protocol.setKeystoreFile("/opt/keystore.p12");
 			protocol.setKeystorePass("123456");
 			protocol.setKeyAlias("localdomain");
 			
@@ -36,7 +36,7 @@ public class ConnectorConfig {
 			sslHostConfig1.setHostName("test1.localdomain");
 			
 			SSLHostConfigCertificate certificate1 = new SSLHostConfigCertificate(sslHostConfig1, SSLHostConfigCertificate.DEFAULT_TYPE);		
-			certificate1.setCertificateKeystoreFile("/home/bruno/git/desafio-proxy/keystore.p12");
+			certificate1.setCertificateKeystoreFile("/opt/keystore.p12");
 			certificate1.setCertificateKeystorePassword("123456");
 			certificate1.setCertificateKeyAlias("test1.localdomain");		
 			certificate1.setCertificateKeystoreType("PKCS12");
@@ -48,7 +48,7 @@ public class ConnectorConfig {
 			sslHostConfig2.setHostName("test2.localdomain");
 
 			SSLHostConfigCertificate certificate2 = new SSLHostConfigCertificate(sslHostConfig1, SSLHostConfigCertificate.DEFAULT_TYPE);		
-			certificate2.setCertificateKeystoreFile("/home/bruno/git/desafio-proxy/keystore.p12");
+			certificate2.setCertificateKeystoreFile("/opt/keystore.p12");
 			certificate2.setCertificateKeystorePassword("123456");
 			certificate2.setCertificateKeyAlias("test2.localdomain");		
 			certificate2.setCertificateKeystoreType("PKCS12");
