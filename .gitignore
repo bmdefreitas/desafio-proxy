@@ -27,6 +27,7 @@ hs_err_pid*
 .gradle
 /build/
 /bin/
+!proxy-reverso.jar
 !gradle/wrapper/gradle-wrapper.jar
 
 ### STS ###
