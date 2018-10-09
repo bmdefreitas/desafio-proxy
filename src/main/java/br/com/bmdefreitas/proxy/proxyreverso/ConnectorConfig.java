@@ -13,52 +13,78 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class ConnectorConfig {
 	
+	/**
+	 * Adiciona o Connector configurado no Tomcat Embedded do SpringBoot
+	 * <p>
+	 * Este método irá retonar o Servlet Web Server Factory e adicionar
+	 * o Connector configurado.
+	 *
+	 * @return  ServletWebServerFactory
+	 */
 	@Bean
 	public ServletWebServerFactory servletContainer() {
 		TomcatServletWebServerFactory tomcat = new TomcatServletWebServerFactory();
 		tomcat.addAdditionalTomcatConnectors(createSslConnector());
 		return tomcat;
 	}
-
+	
+	/**
+	 * Retorna Connector SSL para com as configurações necessárias para o 
+	 * Tomcat Embedded  
+	 * <p>
+	 * Este método irá retornar o Connector para configurações do Tomcat Embedded do
+	 * SpringBoot.
+	 *
+	 * @return  Connector para o Tomcat Embedded
+	 */
 	private Connector createSslConnector() {
 		Connector connector = new Connector("org.apache.coyote.http11.Http11NioProtocol");
 		Http11NioProtocol protocol = (Http11NioProtocol) connector.getProtocolHandler();
 		try {
+			
 			connector.setScheme("https");
 			connector.setSecure(true);
 			connector.setPort(8443);
+			
 			protocol.setSSLEnabled(true);
 			protocol.setKeystoreFile("/opt/keystore.p12");
 			protocol.setKeystorePass("123456");
 			protocol.setKeyAlias("localdomain");
 			
-			SSLHostConfig sslHostConfig1 = new SSLHostConfig();	
-			sslHostConfig1.setHostName("test1.localdomain");
+			connector.addSslHostConfig(getSSLHostConfig("test1.localdomain"));
 			
-			SSLHostConfigCertificate certificate1 = new SSLHostConfigCertificate(sslHostConfig1, SSLHostConfigCertificate.DEFAULT_TYPE);		
-			certificate1.setCertificateKeystoreFile("/opt/keystore.p12");
-			certificate1.setCertificateKeystorePassword("123456");
-			certificate1.setCertificateKeyAlias("test1.localdomain");		
-			certificate1.setCertificateKeystoreType("PKCS12");
-			sslHostConfig1.addCertificate(certificate1);
+			connector.addSslHostConfig(getSSLHostConfig("test2.localdomain"));
 			
-			connector.addSslHostConfig(sslHostConfig1);
-			
-			SSLHostConfig sslHostConfig2 = new SSLHostConfig();	
-			sslHostConfig2.setHostName("test2.localdomain");
-
-			SSLHostConfigCertificate certificate2 = new SSLHostConfigCertificate(sslHostConfig1, SSLHostConfigCertificate.DEFAULT_TYPE);		
-			certificate2.setCertificateKeystoreFile("/opt/keystore.p12");
-			certificate2.setCertificateKeystorePassword("123456");
-			certificate2.setCertificateKeyAlias("test2.localdomain");		
-			certificate2.setCertificateKeystoreType("PKCS12");
-			sslHostConfig2.addCertificate(certificate2);
-			
-			connector.addSslHostConfig(sslHostConfig2);
 			return connector;
 		}
 		catch (Exception ex) {
 			throw new IllegalStateException("Error:", ex);
 		}
+	}
+
+	/**
+	 * Retorna SSLHostConfig para configuração do Tomcat Embedded
+	 * a partir de um certo FQDN 
+	 * <p>
+	 * Este método irá apoiar nas configurações do Tomcat Embedded do
+	 * SpringBoot. A partir de um FQDN será retornado todas configurações
+	 * necessárias para disponibilizar o certificado correspondente do host.
+	 *
+	 * @param  hostname  um nome para ser configurado no Tomcat Embedded
+	 * @return  SSLHostConfig para o Tomcat Embedded
+	 */
+	private SSLHostConfig getSSLHostConfig(String hostname) {
+		SSLHostConfig sslHostConfig = new SSLHostConfig();	
+		sslHostConfig.setHostName(hostname);
+		
+		SSLHostConfigCertificate certificate = new SSLHostConfigCertificate(sslHostConfig, SSLHostConfigCertificate.DEFAULT_TYPE);		
+		certificate.setCertificateKeystoreFile("/opt/keystore.p12");
+		certificate.setCertificateKeystorePassword("123456");
+		certificate.setCertificateKeyAlias("test1.localdomain");		
+		certificate.setCertificateKeystoreType("PKCS12");
+		
+		sslHostConfig.addCertificate(certificate);
+		
+		return sslHostConfig;
 	}
 }
