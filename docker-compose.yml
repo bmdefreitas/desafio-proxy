@@ -24,7 +24,7 @@ services:
         build:
             dockerfile: ./docker/java.dockerfile
             context: .
-        image: melinite/oracle-java8-jdk
+        image: java
         container_name: java
         networks: 
             desafio-network:
