@@ -1,4 +1,5 @@
 # Proxy Reverso
+
 Proxy HTTPS Reverso - JAVA com suporte SNI
 
 
@@ -108,7 +109,42 @@ KeyIdentifier [
 *******************************************
 ```
 
-#Rodando o Projeto
+#Ajustes no SO - Linux
+
+Tendo em vista que o Proxy deverá atender mais de 10.000 conexões simultâneas e que todas as conexão se faz necessário acessar o Keystore para checar se o CN contém nele, alguns ajustes no SO serão necessários para melhorar a performance. Podemos levar em consideração ajustar os parametros do file descriptors e do número de processos abertos. Inicialmente o SO limita estes números por usuário. Então o usuário que rodará a aplicação deverá ter essas configurações ajustadas. Logo abaixo tentarei exemplificar.
+
+*/etc/security/limits.conf* 
+
+```
+proxyuser soft nofile 294180 
+proxuser hard nofile 294180 
+proxyuser soft nproc 32768 
+proxyuser hard nproc 32768
+```
+
+
+Como a configuração de fs.file-max tem precedência com as configurações do nofile, devemos ajustá-la com valor igual o superior. O superior neste caso é mais recomendado.
+
+*/etc/sysctl.conf*
+
+```
+fs.file-max = 294180
+```
+
+
+Podemos considerar as configurações TCP do Kernel, tais como: 
+
+*/etc/sysctl.conf*
+
+```
+net.ipv4.tcp_tw_reuse=1 
+net.ipv4.tcp_tw_recycle=1 
+net.ipv4.tcp_fin_timeout=60
+```
+
+
+#Rodando o Projeto com Docker
+
 Configurar o arquivo hosts do cliente que irá acessar a solução, informando o IP para os hosts test1.localdomain, test2.localdomain e test3.localdomain, conforme abaixo:
 
 
@@ -116,10 +152,17 @@ Configurar o arquivo hosts do cliente que irá acessar a solução, informando o
 10.0.0.7        localdomain
 10.0.0.7        test1.localdomain
 10.0.0.7        test2.localdomain
-10.0.0.7		  test3.localdomain
+10.0.0.7        test3.localdomain
 ```
 
-Considerando que o docker e docker-compose estejam instalado, execute os comandos abaixo para a criacao e start dos containers:
+Faça o checkout do projeto:
+
+```
+git clone https://github.com/bmdefreitas/desafio-proxy.git
+```
+
+
+Considerando que o docker e docker-compose estejam instalado, execute os comandos abaixo para a criação e start dos containers:
 
 ```
 sudo docker-compose build
@@ -129,3 +172,20 @@ sudo docker-compose up
 Abra o browser e acesse a url: [https://test1.localdomain:8443/](https://test1.localdomain:8443/) verifique o certificado correspondente.
 
 Em seguida acesse a url: [https://test2.localdomain:8443/](https://test2.localdomain:8443/) verifique o certificado correspondente.
+
+
+#Rodando o Projeto com Ansible
+
+Faça o checkout do projeto:
+
+```
+git clone https://github.com/bmdefreitas/desafio-proxy.git
+```
+
+Considerando que o ansible esteja instalado, execute os comandos abaixo:
+
+
+```
+ansible-playbook -i hosts provisioning.yml
+``` 
+
