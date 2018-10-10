@@ -1,0 +1,86 @@
+---
+- hosts: backends
+  handlers:
+    - name: restart nginx
+      service:
+        name: nginx
+        state: restarted
+      become: yes
+      
+  tasks:
+
+    - name: 'Instala pacote do nginx'
+      apt:
+        name: "{{ item }}"
+        state: latest
+      become: yes
+      with_items:
+        - nginx
+
+    - name: 'Copia o arquivo de configuração do nginx'
+      copy:
+        src: docker/config/nginx.conf
+        dest: /etc/nginx/conf.d/default.conf
+        mode: 0750
+      become: yes
+      notify:
+        - restart nginx
+        
+- hosts: proxy
+  tasks:
+  
+    - name: 'Instala pacotes de dependências do Projeto'
+      apt:
+        name: "{{ item }}"
+        state: latest
+      become: yes
+      with_items:
+        - openjdk-8-jdk
+        - git
+
+    - name: 'Git Clone do Projeto'
+      git:
+        repo: https://github.com/bmdefreitas/desafio-proxy.git 
+        dest: /opt/desafio-proxy
+      become: yes
+        
+    - name: 'Copia o keystore para o /opt'
+      copy:
+        src: /opt/desafio-proxy/keystore.p12
+        dest: /opt/keystore.p12
+        remote_src: yes
+      become: yes 
+      
+    - name: 'Copia o application.properties para o /opt'
+      copy:
+        src: /opt/desafio-proxy/src/main/resources/application.properties
+        dest: /opt/application.properties
+        remote_src: yes
+      become: yes
+    
+    - name: 'Importa pkcs12 keystore para o jks do JRE'
+      java_cert:
+        pkcs12_path: "/opt/keystore.p12"
+        pkcs12_password: 123456
+        keystore_path: /opt/jdk/jre/lib/security/cacerts
+        keystore_pass: changeit
+        state: present 
+        
+    - name: 'Build do Projeto'
+      shell: /opt/desafio-proxy/gradlew -b /opt/desafio-proxy/build.gradle bootJar
+      become: yes
+                 
+    - name: 'Copia o jar para o /opt'
+      copy:
+        src: /opt/desafio-proxy/build/libs/proxy-reverso-0.1.0.jar
+        dest: /opt/proxy-reverso.jar
+        remote_src: yes
+      become: yes
+      
+    - name: 'Executa a o Projeto'
+      shell: java -jar /opt/desafio-proxy/build.gradle bootJar
+      become: yes
+
+
+
+     
