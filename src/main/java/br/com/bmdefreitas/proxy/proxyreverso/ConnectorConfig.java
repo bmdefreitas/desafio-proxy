@@ -5,13 +5,24 @@ import org.apache.catalina.connector.Connector;
 import org.apache.coyote.http11.Http11NioProtocol;
 import org.apache.tomcat.util.net.SSLHostConfig;
 import org.apache.tomcat.util.net.SSLHostConfigCertificate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
 import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * Classe de Configuração do Connector do Tomcat Embedded
+ *
+ *
+ * @author  Bruno Medeiros
+ */
+
 @Configuration
 public class ConnectorConfig {
+	
+	private static final Logger logger = LoggerFactory.getLogger(ConnectorConfig.class);
 	
 	/**
 	 * Adiciona o Connector configurado no Tomcat Embedded do SpringBoot
@@ -58,6 +69,7 @@ public class ConnectorConfig {
 			return connector;
 		}
 		catch (Exception ex) {
+			logger.error(ex.getMessage());
 			throw new IllegalStateException("Error:", ex);
 		}
 	}
@@ -80,7 +92,7 @@ public class ConnectorConfig {
 		SSLHostConfigCertificate certificate = new SSLHostConfigCertificate(sslHostConfig, SSLHostConfigCertificate.DEFAULT_TYPE);		
 		certificate.setCertificateKeystoreFile("/opt/keystore.p12");
 		certificate.setCertificateKeystorePassword("123456");
-		certificate.setCertificateKeyAlias("test1.localdomain");		
+		certificate.setCertificateKeyAlias(hostname);		
 		certificate.setCertificateKeystoreType("PKCS12");
 		
 		sslHostConfig.addCertificate(certificate);

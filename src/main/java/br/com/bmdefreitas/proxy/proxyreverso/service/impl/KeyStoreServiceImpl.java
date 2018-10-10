@@ -12,20 +12,32 @@ import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 
 import org.cryptacular.util.CertUtil;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import br.com.bmdefreitas.proxy.proxyreverso.service.IKeyStoreService;
 
+/**
+ * Classe de Implementação do Serviço do Keystore
+ *
+ *
+ * @author  Bruno Medeiros
+ */
+
 @Service
 public class KeyStoreServiceImpl implements IKeyStoreService{
-	
-	private KeyStore keyStore;
-	
-	@Autowired
-    private Environment env;
 
+	/**
+	 * Retorna o KeyStore  
+	 * <p>
+	 * Este método acessa os dados contidos no KeyStore 
+	 * 
+	 * @return keyStore
+	 * @throws IOException
+	 * @throws KeyStoreException
+	 * @throws NoSuchAlgorithmException
+	 * @throws CertificateException
+	 * @throws FileNotFoundException
+	 */
 	@Override
 	public KeyStore getKeyStore() throws 
 		KeyStoreException, 
@@ -35,8 +47,8 @@ public class KeyStoreServiceImpl implements IKeyStoreService{
 		IOException {
 
 		File file = new File("/opt/keystore.p12");
-
-		keyStore = KeyStore.getInstance("PKCS12");
+		
+		KeyStore keyStore = KeyStore.getInstance("PKCS12");
 		
 		if (file.exists()) {
 			keyStore.load(new FileInputStream(file), "123456".toCharArray());
@@ -46,8 +58,23 @@ public class KeyStoreServiceImpl implements IKeyStoreService{
 		return keyStore;
 	}
 	
+	/**
+	 * Retorna o certificado encontrado no KeyStore 
+	 * <p>
+	 * Este método irá verificar se contém no keystore o certificado 
+	 * do host solicitado, caso encontre retornará o certificado contido,
+	 * caso contrário será retornado null
+	 *
+	 * @param certificates lista de certificados a ser procurado no keystore 
+	 * @return certificate certificado encontrado X509Certificate
+	 * @throws IOException
+	 * @throws KeyStoreException
+	 * @throws NoSuchAlgorithmException
+	 * @throws CertificateException
+	 * @throws FileNotFoundException
+	 */
 	public X509Certificate containsCertificatesInKeystore(Certificate[] certificates) throws KeyStoreException, NoSuchAlgorithmException, CertificateException, FileNotFoundException, IOException {
-		keyStore = getKeyStore();
+		KeyStore keyStore = getKeyStore();
 		for (Certificate certificate : certificates) {
 			if (certificate instanceof X509Certificate) {
 				X509Certificate x509cert = (X509Certificate) certificate;

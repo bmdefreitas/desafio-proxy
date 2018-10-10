@@ -9,9 +9,17 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import br.com.bmdefreitas.proxy.proxyreverso.service.IProxyService;
+
+/**
+ * Classe controladora
+ *
+ *
+ * @author  Bruno Medeiros
+ */
 
 @WebServlet(
   name = "ProxyController",
@@ -24,17 +32,23 @@ public class ProxyController extends HttpServlet {
 	
 	@Autowired
 	private IProxyService proxyService;
-
+	
+	/**
+	 * Este método trata requisições e respostas do tipo GET.
+	 *
+	 * @param  request  HttpServletRequest
+	 * @param  response HttpServletResponse
+	 */
 	@Override
     protected void doGet(
       HttpServletRequest request, 
       HttpServletResponse response) throws ServletException, IOException {
 		String bodyResponse = proxyService.checkRequest(new URL(request.getRequestURL().toString()));
-		if ( !bodyResponse.isEmpty() ) {
+		if ( StringUtils.isBlank(bodyResponse) ) {
+			response.setStatus(HttpServletResponse.SC_FORBIDDEN);			
+		} else {
 			response.setStatus(HttpServletResponse.SC_OK);
 			response.getWriter().print(bodyResponse);
-		} else {
-			response.setStatus(HttpServletResponse.SC_FORBIDDEN);
 		}
     }
 }

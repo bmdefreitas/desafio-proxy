@@ -9,6 +9,13 @@ import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 
+/**
+ * Interface do Serviço do Keystore
+ *
+ *
+ * @author  Bruno Medeiros
+ */
+
 public interface IKeyStoreService {
 	
 	public KeyStore getKeyStore() throws KeyStoreException, NoSuchAlgorithmException, CertificateException, FileNotFoundException, IOException;
