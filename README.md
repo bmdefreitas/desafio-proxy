@@ -109,7 +109,7 @@ KeyIdentifier [
 *******************************************
 ```
 
-#Ajustes no SO - Linux
+# Ajustes no SO - Linux
 
 Tendo em vista que o Proxy deverá atender mais de 10.000 conexões simultâneas e que todas as conexão se faz necessário acessar o Keystore para checar se o CN contém nele, alguns ajustes no SO serão necessários para melhorar a performance. Podemos levar em consideração ajustar os parametros do file descriptors e do número de processos abertos. Inicialmente o SO limita estes números por usuário. Então o usuário que rodará a aplicação deverá ter essas configurações ajustadas. Logo abaixo tentarei exemplificar.
 
@@ -143,7 +143,7 @@ net.ipv4.tcp_fin_timeout=60
 ```
 
 
-#Rodando o Projeto com Docker
+# Rodando o Projeto com Docker
 
 Configurar o arquivo hosts do cliente que irá acessar a solução, informando o IP para os hosts test1.localdomain, test2.localdomain e test3.localdomain, conforme abaixo:
 
@@ -174,7 +174,7 @@ Abra o browser e acesse a url: [https://test1.localdomain:8443/](https://test1.l
 Em seguida acesse a url: [https://test2.localdomain:8443/](https://test2.localdomain:8443/) verifique o certificado correspondente.
 
 
-#Rodando o Projeto com Ansible
+# Rodando o Projeto com Ansible
 
 Faça o checkout do projeto:
 
