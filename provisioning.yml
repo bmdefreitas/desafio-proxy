@@ -80,7 +80,68 @@
     - name: 'Executa a o Projeto'
       shell: java -jar /opt/desafio-proxy/build.gradle bootJar
       become: yes
+    
+    - name: 'Ajustes no SO - TCP Reuse'
+      sysctl:
+        name: net.ipv4.tcp_tw_reuse
+        value: 1
+        sysctl_set: yes
+        state: present
+        reload: yes  
+      become: yes    
 
+    - name: 'Ajustes no SO - TCP Recycle'
+      sysctl:
+        name: net.ipv4.tcp_tw_recycle
+        value: 1
+        sysctl_set: yes
+        state: present
+        reload: yes
+      become: yes
+      
+    - name: 'Ajustes no SO - TCP TImeout'
+      sysctl: 
+        name: net.ipv4.tcp_fin_timeout
+        value: 60
+        sysctl_set: yes
+        state: present
+        reload: yes
+      become: yes
 
+    - name: 'Ajustes no SO - TCP file max'
+      sysctl: 
+        name: fs.file-max
+        value: 294180
+        sysctl_set: yes
+        state: present
+        reload: yes
+      become: yes
+      
+    - name: 'Ajustes no SO - limits nofile soft'
+      pam_limits:
+        domain: proxyuser
+        limit_type: soft
+        limit_item: nofile
+        value: 294180
 
+    - name: 'Ajustes no SO - limits nofile hard'
+      pam_limits:
+        domain: proxyuser
+        limit_type: hard
+        limit_item: nofile
+        value: 294180 
+    
+    - name: 'Ajustes no SO - limits nproc soft'
+      pam_limits:
+        domain: proxyuser
+        limit_type: soft
+        limit_item: nproc
+        value: 32768
+
+    - name: 'Ajustes no SO - limits nproc hard'
+      pam_limits:
+        domain: proxyuser
+        limit_type: hard
+        limit_item: nproc
+        value: 32768     
      
