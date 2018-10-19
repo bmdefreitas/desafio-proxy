@@ -1,4 +1,4 @@
-package br.com.bmdefreitas.proxy.proxyreverso;
+package br.com.bmdefreitas.proxy.proxyreverso.conf;
 
 
 import org.apache.catalina.connector.Connector;

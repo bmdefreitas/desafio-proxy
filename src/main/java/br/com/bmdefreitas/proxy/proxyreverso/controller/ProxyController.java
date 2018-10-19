@@ -51,4 +51,84 @@ public class ProxyController extends HttpServlet {
 			response.getWriter().print(bodyResponse);
 		}
     }
+	
+	/**
+	 * Este método trata requisições e respostas do tipo POST.
+	 *
+	 * @param  request  HttpServletRequest
+	 * @param  response HttpServletResponse
+	 */
+	@Override
+    protected void doPost(
+      HttpServletRequest request, 
+      HttpServletResponse response) throws ServletException, IOException {
+		//TODO
+    }
+	
+	/**
+	 * Este método trata requisições e respostas do tipo PUT.
+	 *
+	 * @param  request  HttpServletRequest
+	 * @param  response HttpServletResponse
+	 */
+	@Override
+    protected void doPut(
+      HttpServletRequest request, 
+      HttpServletResponse response) throws ServletException, IOException {
+		//TODO
+    }
+	
+	/**
+	 * Este método trata requisições e respostas do tipo DELETE.
+	 *
+	 * @param  request  HttpServletRequest
+	 * @param  response HttpServletResponse
+	 */
+	@Override
+    protected void doDelete(
+      HttpServletRequest request, 
+      HttpServletResponse response) throws ServletException, IOException {
+		//TODO
+    }
+	
+	/**
+	 * Este método trata requisições e respostas do tipo OPTIONS.
+	 *
+	 * @param  request  HttpServletRequest
+	 * @param  response HttpServletResponse
+	 */
+	@Override
+    protected void doOptions(
+      HttpServletRequest request, 
+      HttpServletResponse response) throws ServletException, IOException {
+		//TODO
+    }
+	
+	/**
+	 * Este método trata requisições e respostas do tipo HEAD.
+	 *
+	 * @param  request  HttpServletRequest
+	 * @param  response HttpServletResponse
+	 */
+	@Override
+    protected void doHead(
+      HttpServletRequest request, 
+      HttpServletResponse response) throws ServletException, IOException {
+		//TODO
+    }
+	
+	/**
+	 * Este método trata requisições e respostas do tipo TRACE.
+	 *
+	 * @param  request  HttpServletRequest
+	 * @param  response HttpServletResponse
+	 */
+	@Override
+    protected void doTrace(
+      HttpServletRequest request, 
+      HttpServletResponse response) throws ServletException, IOException {
+		//TODO
+    }
+	
+	
 }
